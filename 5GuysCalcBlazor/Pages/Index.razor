@@ -1,4 +1,6 @@
-﻿@inject HttpClient Http
+﻿@using _5GuysCalcBlazor
+@inject HttpClient Http
+@inject IMenuService _menuService;
 
 @page "/"
 <div class="checkered-border top"></div>
@@ -146,7 +148,7 @@
     int PlusOned = 4;
     protected override async Task OnInitializedAsync()
     {
-        PlusOned = await Http.GetFromJsonAsync<int>("MenuController/ReturnPlusOne(4)");
+        PlusOned = _menuService.ReturnThree();
     }
     
 }
