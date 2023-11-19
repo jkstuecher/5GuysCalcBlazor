@@ -1,4 +1,6 @@
-﻿@page "/"
+﻿@inject HttpClient Http
+
+@page "/"
 <div class="checkered-border top"></div>
 <br />
 <div class="container-fluid">
@@ -18,6 +20,7 @@
 
         <div class="col-md-10">
             <h1>Five Guys <br />Nutrition Calculator</h1>
+            <h1>@PlusOned</h1>
         </div>
     </div><!--top row-->
 </div><!--top-->
@@ -140,5 +143,10 @@
 </div><!--Nutrition and Menu-->
 
 @code{
-
+    int PlusOned = 4;
+    protected override async Task OnInitializedAsync()
+    {
+        PlusOned = await Http.GetFromJsonAsync<int>("MenuController/ReturnPlusOne(4)");
+    }
+    
 }
