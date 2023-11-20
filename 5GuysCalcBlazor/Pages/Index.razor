@@ -1,5 +1,6 @@
 ﻿@using _5GuysCalcBlazor;
 @using Services;
+@using _5GCalc.Models;
 @inject HttpClient Http
 @inject IMenuService _menuService;
 
@@ -23,7 +24,6 @@
 
         <div class="col-md-10">
             <h1>Five Guys <br />Nutrition Calculator</h1>
-            <h1>@PlusOned</h1>
         </div>
     </div><!--top row-->
 </div><!--top-->
@@ -139,6 +139,8 @@
                             </div>
                         }
                     }*@
+                    @resultString
+
                 </div>
             </div>
         </div><!--menu options-->
@@ -146,10 +148,18 @@
 </div><!--Nutrition and Menu-->
 
 @code{
-    int PlusOned = 4;
+    string resultString;
     protected override async Task OnInitializedAsync()
     {
-        PlusOned = _menuService.ReturnThree();
+        Menu menu = _menuService.GetMenu();
+        resultString = "<ul>";
+
+        foreach (MenuItem mi in menu.Items)
+        {
+            resultString += "<li>"+mi.ItemName+"</li>";
+        }
+
+        resultString += "</ul>";
     }
     
 }

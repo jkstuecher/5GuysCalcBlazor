@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Data;
-using System.Reflection;
+using System.Reflection; 
 
 namespace Services
 {
@@ -15,8 +15,10 @@ namespace Services
             List<string> menuSections = new List<string>();
 
             DataSet itemsSet = new DataSet(); //will hold data about all the items
-            //itemsSet.ReadXmlSchema(HttpContext.Current.Server.MapPath("~/data/Items.xsd")); //get the schema
+            // itemsSet.ReadXmlSchema(HttpContext.Current.Server.MapPath("~/data/Items.xsd")); //get the schema
+            itemsSet.ReadXmlSchema(new System.IO.FileStream("~/data/Items.xsd", System.IO.FileMode.Open)); //get the schema
             //itemsSet.ReadXml(HttpContext.Current.Server.MapPath("~/data/ItemsReOrder.xml")); //get the data
+            itemsSet.ReadXml(new System.IO.FileStream("~/data/ItemsReOrder.xml", System.IO.FileMode.Open)); //get the data
             DataTable itemsTable = itemsSet.Tables[1]; //load data into table
 
             DataView viewSections = new DataView(itemsTable); //will store info about the sections
