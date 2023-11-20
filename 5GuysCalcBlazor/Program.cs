@@ -1,7 +1,7 @@
 using _5GuysCalcBlazor;
-using FiveGuysCalcBlazor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Services;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 
