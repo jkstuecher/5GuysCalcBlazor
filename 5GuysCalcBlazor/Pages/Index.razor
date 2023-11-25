@@ -1,8 +1,6 @@
 ﻿@using _5GuysCalcBlazor;
-@using Services;
 @using _5GCalc.Models;
-@inject HttpClient Http
-@inject IMenuService _menuService;
+@inject HttpClient Http;
 
 @page "/"
 <div class="checkered-border top"></div>
@@ -151,7 +149,18 @@
     string resultString;
     protected override async Task OnInitializedAsync()
     {
-        Menu menu = _menuService.GetMenu();
+        Menu menu = new Menu();
+        //var ItemList = new MenuItem[100];
+        try
+        {
+            var ItemList = await Http.GetFromJsonAsync<MenuItem[]>("sample-data/menuitems.json");
+            menu.Items = ItemList.ToList();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        //menu.Items = await Http.GetFromJsonAsync<IEnumerable<MenuItem>("items.json");
         resultString = "<ul>";
 
         foreach (MenuItem mi in menu.Items)
