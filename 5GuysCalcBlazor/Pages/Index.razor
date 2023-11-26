@@ -1,6 +1,7 @@
 ﻿@using _5GuysCalcBlazor;
 @using _5GCalc.Models;
 @inject HttpClient Http;
+@inject NavigationManager Navigator
 
 @page "/"
 <div class="checkered-border top"></div>
@@ -87,17 +88,23 @@
             <hr />
             <div class="container-fluid">
                 <div class="panel-group" id="accordion">
-                    @*{
-                        foreach (var c in Model.Sections)
+                    @*@{
+                        foreach (var s in menu.Sections)
+                        {
+                            <p>@s</p>
+                        }
+                    }*@
+                    @{
+                        foreach (var menuSection in menu.Sections)
                         {
                             var collapseStyle = "collapse"; // firstsection ? "collapse in" : "collapse";
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#@c.Replace(' ', '_')">@c</a>
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#@menuSection.Replace(' ', '_')">@menuSection</a>
                                     </h4>
                                 </div>
-                                <div id="@c.Replace(' ', '_')" class="panel-collapse @collapseStyle">
+                                <div id="@menuSection.Replace(' ', '_')" class="panel-collapse @collapseStyle">
                                     <div class="panel-body">
                                         <table class="table table-hover clickable-row">
                                             <thead>
@@ -112,31 +119,31 @@
                                                 </tr>
                                             </thead>
                                             @{
-                                                var items = Model.Items.Where(x => x.Section == c).ToList();
-                                                foreach (var i in items)
-                                                {
-                                                    var itemID = i.ItemName.Replace(' ', '_');
-                                                    itemID = itemID.Replace('.', '-');
-                                                    <tr id="row_@itemID">
-                                                        <td>
-                                                            <input type="checkbox" id="cb_@itemID" onchange="checkboxChecker('#yourSelection', '@basePath')" />
-                                                            <a href="javascript:hyperlinkSelector('@itemID','#yourSelection', '@basePath');" id="Link_@itemID">@i.ItemName</a>
-                                                        </td>
-                                                        <td>@i.Calories</td>
-                                                        <td class="visible-lg">@i.TotalFat</td>
-                                                        <td class="visible-lg">@i.Sodium</td>
-                                                        <td class="hidden-xs">@i.Carbs</td>
-                                                        <td class="visible-lg">@i.Fiber</td>
-                                                        <td class="hidden-xs">@i.Protein</td>
-                                                    </tr>
-                                                }
+                                                var items = menu.Items.Where(x => x.Section == menuSection).ToList();
+                                                //foreach (var i in items)
+                                                //{
+                                                //    var itemID = i.ItemName.Replace(' ', '_');
+                                                //    itemID = itemID.Replace('.', '-');
+                                                //    <tr id="row_@itemID">
+                                                //        <td>
+                                                //            <input type="checkbox" id="cb_@itemID" onchange="checkboxChecker('#yourSelection', '@Navigator.BaseUri')" />
+                                                //            <a href="javascript:hyperlinkSelector('@itemID','#yourSelection', '@Navigator.BaseUri');" id="Link_@itemID">@i.ItemName</a>
+                                                //        </td>
+                                                //        <td>@i.Calories</td>
+                                                //        <td class="visible-lg">@i.TotalFat</td>
+                                                //        <td class="visible-lg">@i.Sodium</td>
+                                                //        <td class="hidden-xs">@i.Carbs</td>
+                                                //        <td class="visible-lg">@i.Fiber</td>
+                                                //        <td class="hidden-xs">@i.Protein</td>
+                                                //    </tr>
+                                                //}
                                             }
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         }
-                    }*@
+                    }
                     @resultString
 
                 </div>
@@ -147,20 +154,21 @@
 
 @code{
     string resultString;
+    Menu menu = new Menu();
     protected override async Task OnInitializedAsync()
     {
-        Menu menu = new Menu();
-        //var ItemList = new MenuItem[100];
+        
+
         try
         {
-            var ItemList = await Http.GetFromJsonAsync<MenuItem[]>("sample-data/menuitems.json");
-            menu.Items = ItemList.ToList();
+            var itemList = await Http.GetFromJsonAsync<MenuItem[]>("sample-data/menuitems.json");
+            menu.Items = itemList.ToList();
+            menu.Sections = itemList.Select(i => i.Section).Distinct().ToList();
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
-        //menu.Items = await Http.GetFromJsonAsync<IEnumerable<MenuItem>("items.json");
         resultString = "<ul>";
 
         foreach (MenuItem mi in menu.Items)
