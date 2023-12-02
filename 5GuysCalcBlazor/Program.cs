@@ -14,6 +14,7 @@ internal class Program
 
         builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });;
         builder.Services.AddMvcCore();
+        builder.Services.AddBlazorBootstrap();
         //builder.Services.AddControllers();
         await builder.Build().RunAsync();
     }
