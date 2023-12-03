@@ -1,7 +1,8 @@
 ﻿@using _5GuysCalcBlazor;
 @using _5GCalc.Models;
 @inject HttpClient Http;
-@inject NavigationManager Navigator
+@inject NavigationManager Navigator;
+@inject IJSRuntime JsRuntime
 
 @page "/"
 <div class="checkered-border top"></div>
@@ -120,7 +121,7 @@
                                                     itemID = itemID?.Replace('.', '-');
                                                     <tr id="row_@itemID">
                                                         <td>
-                                                            <input type="checkbox" id="cb_@itemID" onchange="checkboxChecker('#yourSelection', '@Navigator.BaseUri')" />
+                                                            <input type="checkbox" id="cb_@itemID" @onchange="CheckChanged" @onclick="cbClicked"/>
                                                             <a href="javascript:hyperlinkSelector('@itemID','#yourSelection', '@Navigator.BaseUri');" id="Link_@itemID">@i.ItemName</a>
                                                         </td>
                                                         <td>@i.Calories</td>
@@ -149,18 +150,32 @@
 
 
 @code{
-    Menu menu = new Menu();
+    Menu menu { get; set; } = new Menu();
+
     protected override async Task OnInitializedAsync()
     {
+
         try
         {
             var itemList = await Http.GetFromJsonAsync<MenuItem[]>("sample-data/menuitems.json");
-            menu.Items = itemList.ToList();
+            menu.Items = itemList?.ToList();
             menu.Sections = itemList.Select(i => i.Section).Distinct().ToList();
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
+    }
+
+    private void CheckChanged()
+    {
+        JsRuntime.InvokeVoidAsync("alert", "Warning!");
+        //checkedMessage = $"Last changed at {DateTime.Now}";
+
+    }
+
+    private void cbClicked()
+    {
+        JsRuntime.InvokeVoidAsync("alert", "Checked!");
     }
 }

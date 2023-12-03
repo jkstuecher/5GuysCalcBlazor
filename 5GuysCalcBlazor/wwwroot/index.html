@@ -16,6 +16,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <script>
+        //this function checks the box if someone clicks the item name next to it
         function hyperlinkSelector(itemName, divToUpdate, basePath) {
             var element = document.getElementById('cb_' + itemName);
             if (element.checked) {
@@ -24,7 +25,7 @@
             else {
                 $('#cb_' + itemName).prop("checked", true);
             }
-            checkboxChecker(divToUpdate, basePath);
+            //checkboxChecker(divToUpdate, basePath);
         }
     </script>
 
