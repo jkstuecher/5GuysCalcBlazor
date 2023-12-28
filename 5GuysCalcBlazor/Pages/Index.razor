@@ -47,36 +47,36 @@
                     <tbody>
                         <tr>
                             <th style="text-align: left;" colspan="2">
-                                <div id="Calories">Calories: 0</div>
+                                <div id="Calories">Calories: @(calorieTotal)g</div>
                             </th>
                         </tr>
 
                         <tr>
                             <th style="text-align: left;" colspan="2">
-                                <div id="Fat">Fat:0g</div>
+                                <div id="Fat">Fat:@(fatTotal)g</div>
                             </th>
                         </tr>
 
                         <tr>
                             <th style="text-align: left;" colspan="2">
-                                <div id="Sodium">Sodium: 0g</div>
+                                <div id="Sodium">Sodium: @(sodiumTotal)g</div>
                             </th>
                         </tr>
                         <tr>
                             <th style="text-align: left;" colspan="2">
-                                <div id="Carbs">Total Carbs: 0g</div>
-                            </th>
-                        </tr>
-
-                        <tr>
-                            <th style="text-align: left;" colspan="2">
-                                <div id="Fiber">Fiber: 0g</div>
+                                <div id="Carbs">Total Carbs: @(carbsTotal)g</div>
                             </th>
                         </tr>
 
                         <tr>
                             <th style="text-align: left;" colspan="2">
-                                <div id="Protein">Protein: 0g</div>
+                                <div id="Fiber">Fiber: @(fiberTotal)g</div>
+                            </th>
+                        </tr>
+
+                        <tr>
+                            <th style="text-align: left;" colspan="2">
+                                <div id="Protein">Protein: @(proteinTotal)g</div>
                             </th>
                         </tr>
                     </tbody>
@@ -121,8 +121,9 @@
                                                     itemID = itemID?.Replace('.', '-');
                                                     <tr id="row_@itemID">
                                                         <td>
-                                                            <input type="checkbox" id="cb_@itemID" @onclick="CheckChanged" />
-                                                            <a href="javascript:hyperlinkSelector('@itemID','#yourSelection', '@Navigator.BaseUri');" id="Link_@itemID" @onclick="CheckChanged">@i.ItemName</a>
+                                                            @*<input type="checkbox" id="cb_@itemID" @onclick="CheckChanged(itemID)" />*@
+                                                            <input type="checkbox" id="cb_@itemID" @onclick="() => CheckChanged(itemID)" />
+                                                            <a href="javascript:hyperlinkSelector('@itemID','#yourSelection', '@Navigator.BaseUri');" id="Link_@itemID" @onclick="() => CheckChanged(itemID)">@i.ItemName</a>
                                                         </td>
                                                         <td>@i.Calories</td>
                                                         <td class="visible-lg">@i.TotalFat</td>
@@ -152,6 +153,15 @@
 @code{
     Menu menu { get; set; } = new Menu();
 
+    List<MenuItem> menuSelection { get; set; } = new List<MenuItem>();
+
+    int calorieTotal = 0;
+    int fatTotal = 0;
+    int sodiumTotal = 0;
+    double carbsTotal = 0;
+    int fiberTotal = 0;
+    double proteinTotal = 0;
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -166,9 +176,43 @@
         }
     }
 
-    private void CheckChanged()
+    private void CheckChanged(string itemID)
     {
-        JsRuntime.InvokeVoidAsync("alert", "Changed!");
+        itemID = itemID.Replace('_', ' ');
+        //JsRuntime.InvokeVoidAsync("alert", ""+@itemID+"");
+        if (menuSelection.Where(m=>m.ItemName == itemID).Count() == 1)
+        {
+            //remove the menu item
+            menuSelection.RemoveAll(m => m.ItemName == itemID);
+        }
+        else
+        {
+            //add menuItem
+            MenuItem mi = menu.Items.Where(m => m.ItemName == itemID).First();
+            menuSelection.Add(mi);
+        }
+
+        //update totals
+
+        if (menuSelection.Count() > 0)
+        {
+            calorieTotal = menuSelection.Sum(x => x.Calories);
+            fatTotal = menuSelection.Sum(x => x.TotalFat);
+            sodiumTotal = menuSelection.Sum(x => x.Sodium);
+            carbsTotal = menuSelection.Sum(x => x.Carbs);
+            fiberTotal = menuSelection.Sum(x => x.Fiber);
+            proteinTotal = menuSelection.Sum(x => x.Protein);
+        }
+        else
+        {
+            calorieTotal = 0;
+            fatTotal = 0;
+            sodiumTotal = 0;
+            carbsTotal = 0;
+            fiberTotal = 0;
+            proteinTotal = 0;
+        }
+
         //checkedMessage = $"Last changed at {DateTime.Now}";
 
     }
