@@ -121,8 +121,8 @@
                                                     itemID = itemID?.Replace('.', '-');
                                                     <tr id="row_@itemID">
                                                         <td>
-                                                            <input type="checkbox" id="cb_@itemID" @onchange="CheckChanged" @onclick="cbClicked"/>
-                                                            <a href="javascript:hyperlinkSelector('@itemID','#yourSelection', '@Navigator.BaseUri');" id="Link_@itemID">@i.ItemName</a>
+                                                            <input type="checkbox" id="cb_@itemID" @onclick="CheckChanged" />
+                                                            <a href="javascript:hyperlinkSelector('@itemID','#yourSelection', '@Navigator.BaseUri');" id="Link_@itemID" @onclick="CheckChanged">@i.ItemName</a>
                                                         </td>
                                                         <td>@i.Calories</td>
                                                         <td class="visible-lg">@i.TotalFat</td>
@@ -154,7 +154,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         try
         {
             var itemList = await Http.GetFromJsonAsync<MenuItem[]>("sample-data/menuitems.json");
@@ -176,6 +175,6 @@
 
     private void cbClicked()
     {
-        //JsRuntime.InvokeVoidAsync("alert", "Checked!");
+        JsRuntime.InvokeVoidAsync("alert", "Checked!");
     }
 }
