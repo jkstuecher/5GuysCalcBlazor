@@ -39,6 +39,11 @@
                     <h1 class="performance-facts__title">Nutrition Facts</h1>
                     <p>
                         Serving Details:
+                        <p>@((MarkupString)SelectionString)</p>
+
+                        <div>
+                            <a onclick="uncheckAll()" href="#">Reset Selection</a>
+                        </div>
                         <div id="yourSelection">Your Selection</div>
                     </p>
                     <hr style="margin-bottom:0px">
@@ -155,6 +160,8 @@
 
     List<MenuItem> menuSelection { get; set; } = new List<MenuItem>();
 
+    string SelectionString = "";
+
     int calorieTotal = 0;
     int fatTotal = 0;
     int sodiumTotal = 0;
@@ -202,6 +209,12 @@
             carbsTotal = menuSelection.Sum(x => x.Carbs);
             fiberTotal = menuSelection.Sum(x => x.Fiber);
             proteinTotal = menuSelection.Sum(x => x.Protein);
+            SelectionString = "<ul>";
+            foreach (var mi in menuSelection)
+            {
+                SelectionString += "<li>" + mi.ItemName + "</li>"; 
+            }
+            SelectionString += "</ul>";
         }
         else
         {
@@ -211,6 +224,7 @@
             carbsTotal = 0;
             fiberTotal = 0;
             proteinTotal = 0;
+            SelectionString = "";
         }
 
         //checkedMessage = $"Last changed at {DateTime.Now}";
