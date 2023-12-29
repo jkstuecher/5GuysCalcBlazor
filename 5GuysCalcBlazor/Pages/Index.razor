@@ -37,15 +37,10 @@
             <section class="performance-facts">
                 <header class="performance-facts__header">
                     <h1 class="performance-facts__title">Nutrition Facts</h1>
-                    <p>
                         Serving Details:
                         <p>@((MarkupString)SelectionString)</p>
-
-                        <div>
-                            <a onclick="uncheckAll()" href="#">Reset Selection</a>
-                        </div>
-                        <div id="yourSelection">Your Selection</div>
-                    </p>
+                        <p><a @onclick="ClearSelection" href="#">Reset Selection</a></p>
+                       
                     <hr style="margin-bottom:0px">
                 </header>
                 <table class="performance-facts__table">
@@ -186,7 +181,6 @@
     private void CheckChanged(string itemID)
     {
         itemID = itemID.Replace('_', ' ');
-        //JsRuntime.InvokeVoidAsync("alert", ""+@itemID+"");
         if (menuSelection.Where(m=>m.ItemName == itemID).Count() == 1)
         {
             //remove the menu item
@@ -216,7 +210,7 @@
             }
             SelectionString += "</ul>";
         }
-        else
+        else //clear selection
         {
             calorieTotal = 0;
             fatTotal = 0;
@@ -226,13 +220,19 @@
             proteinTotal = 0;
             SelectionString = "";
         }
-
-        //checkedMessage = $"Last changed at {DateTime.Now}";
-
     }
 
-    private void cbClicked()
+    private void ClearSelection()
     {
-        JsRuntime.InvokeVoidAsync("alert", "Checked!");
+        menuSelection.Clear();
+        SelectionString = "";
+        JsRuntime.InvokeVoidAsync("uncheckAll");
+        calorieTotal = 0;
+        fatTotal = 0;
+        sodiumTotal = 0;
+        carbsTotal = 0;
+        fiberTotal = 0;
+        proteinTotal = 0;
+        SelectionString = "";
     }
 }
