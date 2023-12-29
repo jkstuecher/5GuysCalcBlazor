@@ -7,7 +7,7 @@
 @page "/"
 <div class="checkered-border top"></div>
 <br />
-<div class="container-fluid">
+<div class="container-fluid" style="width:1170px">
     <!--top-->
     <div class="row">
         <!--top row-->
@@ -28,7 +28,7 @@
     </div><!--top row-->
 </div><!--top-->
 
-<div class="container-fluid">
+<div class="container-fluid" style="width:1170px">
     <!--Nutrition and Menu-->
     <div class="row">
         <div class="col-md-6">
@@ -39,7 +39,7 @@
                     <h1 class="performance-facts__title">Nutrition Facts</h1>
                         Serving Details:
                         <p>@((MarkupString)SelectionString)</p>
-                        <p><a @onclick="ClearSelection" href="#">Reset Selection</a></p>
+                        <p><a @onclick="ResetSelection" href="#">Reset Selection</a></p>
                        
                     <hr style="margin-bottom:0px">
                 </header>
@@ -212,21 +212,19 @@
         }
         else //clear selection
         {
-            calorieTotal = 0;
-            fatTotal = 0;
-            sodiumTotal = 0;
-            carbsTotal = 0;
-            fiberTotal = 0;
-            proteinTotal = 0;
-            SelectionString = "";
+            ClearSelection();
         }
+    }
+
+    private void ResetSelection()
+    {
+        JsRuntime.InvokeVoidAsync("uncheckAll");
+        ClearSelection();
     }
 
     private void ClearSelection()
     {
         menuSelection.Clear();
-        SelectionString = "";
-        JsRuntime.InvokeVoidAsync("uncheckAll");
         calorieTotal = 0;
         fatTotal = 0;
         sodiumTotal = 0;
